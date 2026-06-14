@@ -136,8 +136,8 @@ Then it compares neighbouring EMAs.
 For each EMA span $p$, the contribution is:
 
 $$
-\frac{\mathrm{EMA}_p(t) - \mathrm{EMA}_{p+1}(t)}
-{|\mathrm{EMA}_{p+1}(t)|}
+\frac{\mathrm{EMA}_{p}(t) - \mathrm{EMA}_{p+1}(t)}
+{\left|\mathrm{EMA}_{p+1}(t)\right|}
 \times \ln(p + 1)
 $$
 
@@ -148,8 +148,8 @@ $$
 =
 \sum_{p=\mathrm{EMA}_{\min}}^{\mathrm{EMA}_{\max}-1}
 \left[
-\frac{\mathrm{EMA}_p(t) - \mathrm{EMA}_{p+1}(t)}
-{|\mathrm{EMA}_{p+1}(t)|}
+\frac{\mathrm{EMA}_{p}(t) - \mathrm{EMA}_{p+1}(t)}
+{\left|\mathrm{EMA}_{p+1}(t)\right|}
 \times \ln(p + 1)
 \right]
 $$
@@ -159,7 +159,7 @@ $$
 If shorter EMAs are above longer EMAs:
 
 $$
-\mathrm{EMA}_p(t) > \mathrm{EMA}_{p+1}(t)
+\mathrm{EMA}_{p}(t) > \mathrm{EMA}_{p+1}(t)
 $$
 
 then the score tends to be positive.
@@ -169,7 +169,7 @@ This usually means upward trend pressure.
 If shorter EMAs are below longer EMAs:
 
 $$
-\mathrm{EMA}_p(t) < \mathrm{EMA}_{p+1}(t)
+\mathrm{EMA}_{p}(t) < \mathrm{EMA}_{p+1}(t)
 $$
 
 then the score tends to be negative.
@@ -274,8 +274,8 @@ $$
 =
 \sum_{p=150}^{199}
 \left[
-\frac{\mathrm{VolumeEMA}_p(t) - \mathrm{VolumeEMA}_{p+1}(t)}
-{|\mathrm{VolumeEMA}_{p+1}(t)|}
+\frac{\mathrm{VolumeEMA}_{p}(t) - \mathrm{VolumeEMA}_{p+1}(t)}
+{\left|\mathrm{VolumeEMA}_{p+1}(t)\right|}
 \times \ln(p + 1)
 \right]
 $$
@@ -311,7 +311,7 @@ $$
 \left(
 \frac{\mathrm{price}(t)}
 {\mathrm{price}(t-w)}
-\right)^{\frac{1}{w}}
+\right)^{1/w}
 - 1
 \right]
 \times 100
@@ -326,7 +326,7 @@ $$
 \left(
 \frac{\mathrm{price}(t)}
 {\mathrm{price}(t-200)}
-\right)^{\frac{1}{200}}
+\right)^{1/200}
 - 1
 \right]
 \times 100
