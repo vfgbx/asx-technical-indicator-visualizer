@@ -133,20 +133,26 @@ EMA_MIN, EMA_MIN + 1, ..., EMA_MAX
 
 Then it compares neighbouring EMAs.
 
-For each span `p`, the contribution is:
+For each EMA span $p$, the contribution is:
 
-```text
-(EMA_p - EMA_(p+1)) / abs(EMA_(p+1)) × ln(p + 1)
-```
+$$
+\frac{\mathrm{EMA}_p(t) - \mathrm{EMA}_{p+1}(t)}
+{|\mathrm{EMA}_{p+1}(t)|}
+\times \ln(p + 1)
+$$
 
 The full score is:
 
-```text
-score[t] =
-Σ from p = EMA_MIN to EMA_MAX - 1
-[
-    (EMA_p[t] - EMA_(p+1)[t]) / |EMA_(p+1)[t]| × ln(p + 1)
-]
+$$
+\mathrm{score}(t)
+=
+\sum_{p=\mathrm{EMA}_{\min}}^{\mathrm{EMA}_{\max}-1}
+\left[
+\frac{\mathrm{EMA}_p(t) - \mathrm{EMA}_{p+1}(t)}
+{|\mathrm{EMA}_{p+1}(t)|}
+\times \ln(p + 1)
+\right]
+$$
 ```
 
 ### Intuition
