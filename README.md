@@ -20,8 +20,6 @@ asx-technical-indicator-visualizer/
 │   ├── BPT_Image.png
 │   ├── BHP_Image.png
 │   └── CBA_Image.png
-├── data/
-│   └── README.md
 └── outputs/
     └── .gitkeep
 ```
