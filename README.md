@@ -144,14 +144,23 @@ $$
 The full score is:
 
 $$
+
 \mathrm{score}(t)
+
 =
+
 \sum_{p=\mathrm{EMA}_{\min}}^{\mathrm{EMA}_{\max}-1}
+
 \left[
+
 \frac{\mathrm{EMA}_p(t) - \mathrm{EMA}_{p+1}(t)}
+
 {|\mathrm{EMA}_{p+1}(t)|}
+
 \times \ln(p + 1)
+
 \right]
+
 $$
 ```
 
