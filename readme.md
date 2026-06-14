@@ -127,23 +127,35 @@ The core indicator is an EMA-spacing energy score.
 
 For a given series, such as price or volume, the script calculates EMAs over a span range:
 
-$$\mathrm{EMA}_{\min},\ \mathrm{EMA}_{\min}+1,\ \ldots,\ \mathrm{EMA}_{\max}$$
+```text
+EMA_MIN, EMA_MIN + 1, ..., EMA_MAX
+```
 
 Then it compares neighbouring EMAs.
 
-For each EMA span $p$, the contribution is:
+For each span `p`, the contribution is:
 
-$$\frac{\mathrm{EMA}_{p}(t)-\mathrm{EMA}_{p+1}(t)}{\left|\mathrm{EMA}_{p+1}(t)\right|}\times\ln(p+1)$$
+```text
+(EMA_p - EMA_(p+1)) / abs(EMA_(p+1)) × ln(p + 1)
+```
 
 The full score is:
 
-$$\mathrm{score}(t)=\sum_{p=\mathrm{EMA}_{\min}}^{\mathrm{EMA}_{\max}-1}\left[\frac{\mathrm{EMA}_{p}(t)-\mathrm{EMA}_{p+1}(t)}{\left|\mathrm{EMA}_{p+1}(t)\right|}\times\ln(p+1)\right]$$
+```text
+score[t] =
+Σ from p = EMA_MIN to EMA_MAX - 1
+[
+    (EMA_p[t] - EMA_(p+1)[t]) / |EMA_(p+1)[t]| × ln(p + 1)
+]
+```
 
 ### Intuition
 
 If shorter EMAs are above longer EMAs:
 
-$$\mathrm{EMA}_{p}(t)>\mathrm{EMA}_{p+1}(t)$$
+```text
+EMA_p > EMA_(p+1)
+```
 
 then the score tends to be positive.
 
@@ -151,7 +163,9 @@ This usually means upward trend pressure.
 
 If shorter EMAs are below longer EMAs:
 
-$$\mathrm{EMA}_{p}(t)<\mathrm{EMA}_{p+1}(t)$$
+```text
+EMA_p < EMA_(p+1)
+```
 
 then the score tends to be negative.
 
@@ -159,7 +173,9 @@ This usually means downward trend pressure.
 
 The logarithmic weight:
 
-$$\ln(p+1)$$
+```text
+ln(p + 1)
+```
 
 gives larger EMA spans slightly more influence while avoiding excessive domination by a single span.
 
@@ -199,11 +215,10 @@ The script marks two types of crossover events.
 
 A bullish crossover is detected when:
 
-$$\mathrm{fast}(t-1)\le\mathrm{slow}(t-1)$$
-
-and
-
-$$\mathrm{fast}(t)>\mathrm{slow}(t)$$
+```text
+fast[t-1] <= slow[t-1]
+fast[t]   >  slow[t]
+```
 
 This is plotted as a green upward triangle.
 
@@ -213,11 +228,10 @@ Conceptually, it means the faster score line has moved above the slower score li
 
 A bearish crossover is detected when:
 
-$$\mathrm{fast}(t-1)\ge\mathrm{slow}(t-1)$$
-
-and
-
-$$\mathrm{fast}(t)<\mathrm{slow}(t)$$
+```text
+fast[t-1] >= slow[t-1]
+fast[t]   <  slow[t]
+```
 
 This is plotted as a black downward triangle.
 
@@ -240,7 +254,15 @@ VOLUME_EMA_MAX = 200
 
 Formula:
 
-$$\operatorname{volume\_score}(t)=\sum_{p=150}^{199}\left[\frac{\mathrm{VolumeEMA}_{p}(t)-\mathrm{VolumeEMA}_{p+1}(t)}{\left|\mathrm{VolumeEMA}_{p+1}(t)\right|}\times\ln(p+1)\right]$$
+```text
+volume_score[t] =
+Σ from p = 150 to 199
+[
+    (Volume_EMA_p[t] - Volume_EMA_(p+1)[t])
+    / |Volume_EMA_(p+1)[t]|
+    × ln(p + 1)
+]
+```
 
 ### Intuition
 
@@ -266,11 +288,17 @@ SPEED_ACCEL_DAYS = 200
 
 Formula:
 
-$$\mathrm{speed}(t)=\left[\left(\frac{\mathrm{price}(t)}{\mathrm{price}(t-w)}\right)^{1/w}-1\right]\times100$$
+```text
+speed[t] =
+((price[t] / price[t-window]) ** (1 / window) - 1) × 100
+```
 
 For a 200-period window:
 
-$$\mathrm{speed}(t)=\left[\left(\frac{\mathrm{price}(t)}{\mathrm{price}(t-200)}\right)^{1/200}-1\right]\times100$$
+```text
+speed[t] =
+((price[t] / price[t-200]) ** (1 / 200) - 1) × 100
+```
 
 ### Intuition
 
@@ -290,7 +318,9 @@ This indicator compares current trading effort against recent historical effort.
 
 The idea is:
 
-$$\text{How much volume is needed to move price by }1\%\text{?}$$
+```text
+How much volume is needed to move price by 1%?
+```
 
 A bar where price moves a lot on relatively low volume may indicate a different type of market behaviour compared with a bar where large volume produces little price movement.
 
@@ -300,7 +330,9 @@ A bar where price moves a lot on relatively low volume may indicate a different 
 
 For each bar:
 
-$$\operatorname{abs\_move\_pct}(t)=\left|\frac{\mathrm{close}(t)}{\mathrm{open}(t)}-1\right|\times100$$
+```text
+abs_move_pct[t] = |close[t] / open[t] - 1| × 100
+```
 
 This measures the absolute percentage movement between open and close.
 
@@ -308,7 +340,9 @@ This measures the absolute percentage movement between open and close.
 
 ## Step 2: Current Effort per 1% Move
 
-$$\operatorname{current\_effort\_per\_1pct}(t)=\frac{\mathrm{volume}(t)}{\operatorname{abs\_move\_pct}(t)}$$
+```text
+current_effort_per_1pct[t] = volume[t] / abs_move_pct[t]
+```
 
 This estimates how much volume was required for each 1% of open-to-close price movement on the current bar.
 
@@ -318,7 +352,10 @@ This estimates how much volume was required for each 1% of open-to-close price m
 
 Using the previous `window` bars:
 
-$$\operatorname{past\_avg\_effort\_per\_1pct}(t)=\frac{\sum_{i=t-w}^{t-1}\mathrm{volume}(i)}{\sum_{i=t-w}^{t-1}\operatorname{abs\_move\_pct}(i)}$$
+```text
+past_avg_effort_per_1pct[t] =
+sum(volume[t-window : t-1]) / sum(abs_move_pct[t-window : t-1])
+```
 
 Default setting:
 
@@ -334,19 +371,26 @@ This measures the recent historical volume required for each 1% of price movemen
 
 The final indicator is:
 
-$$\operatorname{effort\_relative}(t)=\left(\frac{\operatorname{past\_avg\_effort\_per\_1pct}(t)}{\operatorname{current\_effort\_per\_1pct}(t)}-1\right)\times100$$
+```text
+effort_relative[t] =
+(past_avg_effort_per_1pct[t] / current_effort_per_1pct[t] - 1) × 100
+```
 
 ### Interpretation
 
 If the value is positive:
 
-$$\text{past effort per }1\%>\text{current effort per }1\%$$
+```text
+past effort per 1% > current effort per 1%
+```
 
 then the current bar moved price with less effort than the recent past.
 
 If the value is negative:
 
-$$\text{past effort per }1\%<\text{current effort per }1\%$$
+```text
+past effort per 1% < current effort per 1%
+```
 
 then the current bar required more effort than the recent past.
 
@@ -375,7 +419,9 @@ These sliders select a range of price-score values.
 
 All points where:
 
-$$\operatorname{low\_threshold}\le\operatorname{price\_score}(t)\le\operatorname{high\_threshold}$$
+```text
+low_threshold <= price_score <= high_threshold
+```
 
 are highlighted on:
 
