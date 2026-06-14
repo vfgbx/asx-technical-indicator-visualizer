@@ -277,7 +277,8 @@ Formula:
 \frac{\mathrm{VolumeEMA}_{p}(t) - \mathrm{VolumeEMA}_{p+1}(t)}
 {\left|\mathrm{VolumeEMA}_{p+1}(t)\right|}
 \times \ln(p + 1)
-\right]```
+\right]
+```
 
 ### Intuition
 
